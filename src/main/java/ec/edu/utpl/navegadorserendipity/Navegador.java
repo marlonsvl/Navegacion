@@ -12,11 +12,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import org.openqa.selenium.By;
+import static org.openqa.selenium.By.linkText;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  *
  * @author utpl
@@ -97,26 +99,59 @@ public class Navegador {
             
             
             if(num > 0){
-                WebElement primer = driver.findElement(By.xpath("//div[@class='span9']"));
-                WebElement seg = primer.findElement(By.xpath("//div[@class='span6 thumbnail']"));
-                WebElement ter = seg.findElement(By.xpath("//a[@class='fancybox fancybox.iframe']"));
-                System.out.println(ter.getAttribute("href"));
-                ter.sendKeys("");
+                
+                List<WebElement> elementos = driver.findElements(By.xpath("//h4[@property='title']"));
+                System.out.println(elementos.size());
+                
+                int aleatorio2 = random.nextInt(elementos.size());
+                WebElement get = elementos.get(aleatorio2);
+                WebElement ele = get.findElement(By.tagName("a"));
+                System.out.println(ele.getAttribute("href"));
+                ele.sendKeys("");
                 robot.delay(5000);
-                driver.get(ter.getAttribute("href"));
+                WebDriverWait wait = new WebDriverWait(driver, 1);
+                driver.get(ele.getAttribute("href"));
                 robot.delay(10000);
-                driver.navigate().back();
-                robot.delay(10000);
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.className("accordion-group")));
+                WebElement acordeon = driver.findElement(By.className("accordion-group"));
+                
+                List<WebElement>  acs = acordeon.findElements(By.className("accordion-toggle"));
+                for (int j = 0; j < acs.size(); j++) {
+                    WebElement get1 = acs.get(j);
+                    
+                    //System.out.println("acordeon: "+get1.getAttribute("href"));
+                    get1.click();
+                    robot.delay(5000);
+                    
+                }
+                
+                
+//                WebElement primer = driver.findElement(By.xpath("//div[@class='span9']"));
+//                WebElement seg = primer.findElement(By.xpath("//div[@class='span6 thumbnail']"));
+//                WebElement ter = seg.findElement(By.xpath("//a[@class='fancybox fancybox.iframe']"));
+//                System.out.println(ter.getAttribute("href"));
+//                
+//                ter.sendKeys("");
+//                robot.delay(5000);
+//                driver.get(ter.getAttribute("href"));
+//                robot.delay(10000);
+//                driver.navigate().back();
+//                robot.delay(10000);
             }
-            
             
             
             WebElement reset = driver.findElement(By.id("resetBtn"));
             JavascriptExecutor executor = (JavascriptExecutor)driver;
             executor.executeScript("arguments[0].click();", reset);
             
+            if(i < list.size() - 1){
+                driver.get("https://example1-marlonvinan.c9users.io/example2/");
+                robot.delay(10000);
+                driver.get("http://serendipity.utpl.edu.ec/");
+                robot.delay(5000);
+            }
+            
         }
-        
         }
         //jsx.executeScript("window.history.go(-1)");
         //robot.delay(5000);
